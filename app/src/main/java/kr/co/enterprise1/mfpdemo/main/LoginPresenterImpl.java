@@ -55,6 +55,6 @@ public class LoginPresenterImpl implements LoginPresenter {
   }
 
   @Override public void onPause() {
-    loginInteractor.unRegisterReceiver();
+    loginInteractor.unregisterReceiver();
   }
 }

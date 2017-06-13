@@ -48,4 +48,6 @@ dependencies {
 
   compile 'org.projectlombok:lombok:1.16.16'
   provided 'javax.annotation:jsr250-api:1.0'
+
+  compile 'com.pixplicity.easyprefs:library:1.8.1@aar'
 }

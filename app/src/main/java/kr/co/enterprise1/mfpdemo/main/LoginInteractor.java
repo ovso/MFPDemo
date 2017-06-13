@@ -46,7 +46,7 @@ class LoginInteractor {
         new IntentFilter(Constants.ACTION_LOGIN_SUCCESS));
   }
 
-  void unRegisterReceiver() {
+  void unregisterReceiver() {
     localBroadcastManager.unregisterReceiver(loginRequiredReceiver);
     localBroadcastManager.unregisterReceiver(loginErrorReceiver);
     localBroadcastManager.unregisterReceiver(loginSuccessReceiver);

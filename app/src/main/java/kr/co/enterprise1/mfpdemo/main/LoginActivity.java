@@ -59,9 +59,12 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   }
 
   @Override public void navigateToHome() {
-    Intent intent = new Intent(this, HomeActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    startActivity(intent);
+    if (isTaskRoot()) {
+      Intent intent = new Intent(this, HomeActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      startActivity(intent);
+    }
   }
 
   @Override protected void onStart() {
