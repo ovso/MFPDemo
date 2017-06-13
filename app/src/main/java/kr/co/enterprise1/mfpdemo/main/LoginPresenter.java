@@ -1,8 +1,6 @@
 package kr.co.enterprise1.mfpdemo.main;
 
-import android.support.annotation.StringRes;
-
-public interface LoginPresenter {
+interface LoginPresenter {
 
   void onLoginClick(String id, String pw);
 
@@ -19,5 +17,7 @@ public interface LoginPresenter {
     void showErrorSnackbar(String errorMsg, int remainingAttemps);
 
     void showErrorAlert(String title, String errorMsg);
+
+    void navigateToHome();
   }
 }

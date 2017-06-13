@@ -13,13 +13,20 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-    <activity android:name=".main.LoginActivity">
+    <activity
+        android:name=".main.LoginActivity"
+        android:label="@string/login"
+        android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity
+        android:name=".home.HomeActivity"
+        android:label="@string/home"
+        android:screenOrientation="portrait"/>
     <activity android:name="com.worklight.wlclient.ui.UIActivity"/>
   </application>
 

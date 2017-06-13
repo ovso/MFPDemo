@@ -22,20 +22,17 @@ class LoginInteractor {
 
   private BroadcastReceiver loginErrorReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
-      Log.d(TAG, "loginErrorReceiver()");
       onLoginResultListener.onLoginFailure(intent.getStringExtra("errorMsg"));
     }
   };
   private BroadcastReceiver loginRequiredReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
-      Log.d(TAG, "loginRequiredReceiver()");
       onLoginResultListener.onLoginRequired(intent.getStringExtra("errorMsg"),
           intent.getIntExtra("remainingAttempts", -1));
     }
   };
   private BroadcastReceiver loginSuccessReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
-      Log.d(TAG, "loginSuccessReceiver()");
       onLoginResultListener.onLoginSuccess();
     }
   };
@@ -58,7 +55,7 @@ class LoginInteractor {
   void login(String id, String pw) {
     JSONObject credentials = new JSONObject();
     try {
-      credentials.put("usename", id);
+      credentials.put("username", id);
       credentials.put("password", pw);
     } catch (JSONException e) {
       e.printStackTrace();

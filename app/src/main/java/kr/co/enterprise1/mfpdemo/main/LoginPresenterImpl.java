@@ -34,7 +34,7 @@ public class LoginPresenterImpl implements LoginPresenter {
   private LoginInteractor.OnLoginResultListener onLoginResultListener =
       new LoginInteractor.OnLoginResultListener() {
         @Override public void onLoginSuccess() {
-
+          view.navigateToHome();
         }
 
         @Override public void onLoginFailure(String errorMsg) {

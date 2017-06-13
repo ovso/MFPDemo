@@ -1,5 +1,7 @@
 <resources>
   <string name="app_name">MFPDemo</string>
-  <string name="erroe_require_id">아이디가 필요합니다.</string>
-  <string name="error_require_pw">암호가 필요합니다.</string>
+  <string name="login">로그인</string>
+  <string name="home">홈</string>
+  <string name="password">Password</string>
+  <string name="id">ID</string>
 </resources>
