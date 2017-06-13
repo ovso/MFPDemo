@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 public interface LoginPresenter {
 
-  void onSignInClick(String id, String pw);
+  void onLoginClick(String id, String pw);
 
   void onStart();
 
@@ -12,9 +12,9 @@ public interface LoginPresenter {
 
   interface View {
 
-    void showIdError(@StringRes int resId);
+    void showIdError(String msg);
 
-    void showPwError(@StringRes int resId);
+    void showPwError(String msg);
 
     void showErrorSnackbar(String errorMsg, int remainingAttemps);
 

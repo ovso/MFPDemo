@@ -2,7 +2,6 @@ package kr.co.enterprise1.mfpdemo.main;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -28,19 +27,19 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   @OnClick(R.id.sign_in_button) void onSignInClick() {
     String id = mIdEditText.getText().toString().trim();
     String pw = mPwEditText.getText().toString().trim();
-    mPresenter.onSignInClick(id, pw);
+    mPresenter.onLoginClick(id, pw);
   }
 
   @Override protected int getLayoutResId() {
     return R.layout.activity_login;
   }
 
-  @Override public void showIdError(@StringRes int resId) {
-    mIdTextInputLayout.setError(resId == 0 ? "" : getString(resId));
+  @Override public void showIdError(String msg) {
+    mIdTextInputLayout.setError(msg);
   }
 
-  @Override public void showPwError(@StringRes int resId) {
-    mPwTextInputLayout.setError(resId == 0 ? "" : getString(resId));
+  @Override public void showPwError(String msg) {
+    mPwTextInputLayout.setError(msg);
   }
 
   @BindView(R.id.root_login) View mRootView;
