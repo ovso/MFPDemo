@@ -1,5 +1,7 @@
 package kr.co.enterprise1.mfpdemo.home;
 
+import android.content.Context;
+import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.app.MyApplication;
 
 class HomePresenterImpl implements HomePresenter {
@@ -10,11 +12,10 @@ class HomePresenterImpl implements HomePresenter {
 
   HomePresenterImpl(HomePresenter.View view) {
     this.view = view;
-    model = new HomeModel(MyApplication.getContext());
-    logoutHandler = new LogoutHandler(MyApplication.getContext());
-    logoutHandler.setOnLogoutListener(() -> {
-      view.navigateToLogin();
-    });
+    Context context = WLClient.getInstance().getContext();
+    model = new HomeModel(context);
+    logoutHandler = new LogoutHandler(context);
+    logoutHandler.setOnLogoutListener(() -> view.navigateToLogin());
   }
 
   @Override public void onCreate() {

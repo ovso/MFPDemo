@@ -18,7 +18,8 @@ class HomeModel {
 
   public String getDisplayName() {
     try {
-      JSONObject user = new JSONObject(Prefs.getString(Constants.PREFERENCES_KEY_USER, "?"));
+      String temp = Prefs.getString(Constants.PREFERENCES_KEY_USER, "?");
+      JSONObject user = new JSONObject(temp);
       return context.getString(R.string.hello_user) + user.getString("displayName");
     } catch (JSONException e) {
       e.printStackTrace();

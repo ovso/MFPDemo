@@ -1,6 +1,7 @@
 package kr.co.enterprise1.mfpdemo.main;
 
-import kr.co.enterprise1.mfpdemo.app.MyApplication;
+import android.content.Context;
+import com.worklight.wlclient.api.WLClient;
 
 class LoginPresenterImpl implements LoginPresenter {
   //private final static String TAG = "LoginPresenterImpl";
@@ -10,9 +11,10 @@ class LoginPresenterImpl implements LoginPresenter {
 
   LoginPresenterImpl(LoginPresenter.View view) {
     this.view = view;
-    loginInteractor = new LoginInteractor(MyApplication.getContext());
+    Context context = WLClient.getInstance().getContext();
+    loginInteractor = new LoginInteractor(context);
     loginInteractor.setOnLoginResultListener(onLoginResultListener());
-    credentialsInputHandler = new CredentialsInputHandler(MyApplication.getContext());
+    credentialsInputHandler = new CredentialsInputHandler(context);
     credentialsInputHandler.setOnInputResultListener(onInputResultListener());
   }
 
