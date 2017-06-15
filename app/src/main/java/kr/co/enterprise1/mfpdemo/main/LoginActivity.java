@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
+import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.OnClick;
 import kr.co.enterprise1.mfpdemo.R;
@@ -65,6 +66,16 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
       intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
       startActivity(intent);
     }
+  }
+
+  @BindView(R.id.loading_progressbar) ProgressBar mLoadingProgressBar;
+
+  @Override public void showLoading() {
+    mLoadingProgressBar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideLoading() {
+    mLoadingProgressBar.setVisibility(View.GONE);
   }
 
   @Override protected void onStart() {

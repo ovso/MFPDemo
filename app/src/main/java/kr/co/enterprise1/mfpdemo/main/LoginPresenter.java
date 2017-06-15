@@ -19,5 +19,9 @@ interface LoginPresenter {
     void showErrorAlert(String title, String errorMsg);
 
     void navigateToHome();
+
+    void showLoading();
+
+    void hideLoading();
   }
 }

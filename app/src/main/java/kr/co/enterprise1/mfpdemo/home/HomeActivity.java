@@ -58,7 +58,7 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
   }
 
   @Override public void onBackPressed() {
-    super.onBackPressed();
+    //super.onBackPressed();
     mPresenter.onBackPressed();
   }
 

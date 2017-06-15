@@ -23,17 +23,20 @@ class LoginInteractor {
   private BroadcastReceiver loginErrorReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       onLoginResultListener.onLoginFailure(intent.getStringExtra("errorMsg"));
+      onLoginResultListener.onLoginFinished();
     }
   };
   private BroadcastReceiver loginRequiredReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       onLoginResultListener.onLoginRequired(intent.getStringExtra("errorMsg"),
           intent.getIntExtra("remainingAttempts", -1));
+      onLoginResultListener.onLoginFinished();
     }
   };
   private BroadcastReceiver loginSuccessReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       onLoginResultListener.onLoginSuccess();
+      onLoginResultListener.onLoginFinished();
     }
   };
 
@@ -73,5 +76,7 @@ class LoginInteractor {
     void onLoginFailure(String errorMsg);
 
     void onLoginRequired(String errorMsg, int remaningAttempts);
+
+    void onLoginFinished();
   }
 }
