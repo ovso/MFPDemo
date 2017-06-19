@@ -24,7 +24,6 @@ public class VersionCheckInteractor {
       adapterPath = null;
     }
     WLResourceRequest request = new WLResourceRequest(adapterPath, WLResourceRequest.GET);
-    request.setQueryParameter("mobileVersion", "1.0.0");
     request.send(new WLResponseListener() {
       @Override public void onSuccess(WLResponse wlResponse) {
         String jsonString = wlResponse.getResponseText();
