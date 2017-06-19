@@ -8,6 +8,7 @@ class LoginPresenterImpl implements LoginPresenter {
   private LoginPresenter.View view;
   private LoginInteractor loginInteractor;
   private CredentialsInputHandler credentialsInputHandler;
+  private VersionCheckInteractor versionCheckInteractor;
 
   LoginPresenterImpl(LoginPresenter.View view) {
     this.view = view;
@@ -16,6 +17,26 @@ class LoginPresenterImpl implements LoginPresenter {
     loginInteractor.setOnLoginResultListener(onLoginResultListener());
     credentialsInputHandler = new CredentialsInputHandler(context);
     credentialsInputHandler.setOnInputResultListener(onInputResultListener());
+    versionCheckInteractor = new VersionCheckInteractor();
+    versionCheckInteractor.setOnVersionCheckListener(onVersionCheckListener());
+  }
+
+  @Override public void onCreate() {
+    versionCheckInteractor.check();
+  }
+
+  @Override public void onUpdateClick() {
+    view.navigateToExternalAppCenter();
+  }
+
+  private VersionCheckInteractor.OnVersionCheckListener onVersionCheckListener() {
+    return version -> {
+      if (version != null) {
+        if (!version.getCenter_version().equals(version.getMobile_version())) {
+          view.showUpdateAlert(version.getTitle(), version.getMessage());
+        }
+      }
+    };
   }
 
   private CredentialsInputHandler.OnInputResultListener onInputResultListener() {

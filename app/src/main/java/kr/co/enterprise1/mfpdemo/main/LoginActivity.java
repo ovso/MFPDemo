@@ -2,6 +2,7 @@ package kr.co.enterprise1.mfpdemo.main;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -25,6 +26,7 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mPresenter = new LoginPresenterImpl(this);
+    mPresenter.onCreate();
   }
 
   @OnClick(R.id.sign_in_button) void onSignInClick() {
@@ -76,6 +78,25 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
 
   @Override public void hideLoading() {
     mLoadingProgressBar.setVisibility(View.GONE);
+  }
+
+  @Override public void showUpdateAlert(String title, String message) {
+    Runnable runnable = () -> {
+      new AlertDialog.Builder(LoginActivity.this).setTitle(title)
+          .setMessage(message)
+          .setNegativeButton(android.R.string.cancel, null)
+          .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            mPresenter.onUpdateClick();
+          })
+          .show();
+    };
+    runOnUiThread(runnable);
+  }
+
+  @Override public void navigateToExternalAppCenter() {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse("market://details?id=kr.blogspot.ovsoce.hotkey"));
+    startActivity(intent);
   }
 
   @Override protected void onStart() {

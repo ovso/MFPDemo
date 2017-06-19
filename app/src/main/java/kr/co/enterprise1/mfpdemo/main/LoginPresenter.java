@@ -8,6 +8,10 @@ interface LoginPresenter {
 
   void onPause();
 
+  void onCreate();
+
+  void onUpdateClick();
+
   interface View {
 
     void showIdError(String msg);
@@ -23,5 +27,9 @@ interface LoginPresenter {
     void showLoading();
 
     void hideLoading();
+
+    void showUpdateAlert(String title, String message);
+
+    void navigateToExternalAppCenter();
   }
 }
