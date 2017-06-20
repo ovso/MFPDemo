@@ -1,6 +1,7 @@
 package kr.co.enterprise1.mfpdemo.main;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -95,8 +96,13 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
 
   @Override public void navigateToExternalAppCenter() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse("market://details?id=kr.blogspot.ovsoce.hotkey"));
-    startActivity(intent);
+    intent.setData(Uri.parse("ibmappctr://show-app?id=com.ibm.appcenter"));
+    try {
+      startActivity(intent);
+    } catch (ActivityNotFoundException e) {
+      Snackbar.make(mRootView, R.string.please_install_appcenter,
+          Snackbar.LENGTH_SHORT).show();
+    }
   }
 
   @Override protected void onStart() {

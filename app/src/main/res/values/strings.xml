@@ -7,4 +7,5 @@
   <string name="password">Password</string>
   <string name="id">ID</string>
   <string name="hello_user">Hello,&#160;&#160;</string>
+  <string name="please_install_appcenter">앱센터가 존재하지 않습니다. 먼저, 앱센터를 설치해 주세요.</string>
 </resources>
