@@ -83,18 +83,17 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   }
 
   @Override public void showUpdateAlert(VersionCheck version) {
-    Runnable runnable = () -> {
-      new AlertDialog.Builder(LoginActivity.this).setTitle(version.getTitle())
-          .setMessage(version.getMessage())
-          .setCancelable(!version.isForce_update())
-          .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-            if (version.isForce_update()) {
-              LoginActivity.this.finish();
-            }
-          })
-          .setPositiveButton(android.R.string.ok, (dialog, which) -> mPresenter.onUpdateClick())
-          .show();
-    };
+    Runnable runnable =
+        () -> new AlertDialog.Builder(LoginActivity.this).setTitle(version.getTitle())
+            .setMessage(version.getMessage())
+            .setCancelable(!version.isForce_update())
+            .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+              if (version.isForce_update()) {
+                LoginActivity.this.finish();
+              }
+            })
+            .setPositiveButton(android.R.string.ok, (dialog, which) -> mPresenter.onUpdateClick())
+            .show();
     runOnUiThread(runnable);
   }
 
