@@ -27,13 +27,14 @@ class LoginPresenterImpl implements LoginPresenter {
 
   @Override public void onUpdateClick() {
     view.navigateToExternalAppCenter();
+    view.exitApp();
   }
 
   private VersionCheckInteractor.OnVersionCheckListener onVersionCheckListener() {
     return version -> {
       if (version != null) {
         if (!version.getCenter_version().equals(version.getMobile_version())) {
-          view.showUpdateAlert(version.getTitle(), version.getMessage());
+          view.showUpdateAlert(version);
         }
       }
     };

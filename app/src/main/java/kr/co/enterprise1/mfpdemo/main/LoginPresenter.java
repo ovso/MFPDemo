@@ -1,5 +1,7 @@
 package kr.co.enterprise1.mfpdemo.main;
 
+import kr.co.enterprise1.mfpdemo.main.vo.VersionCheck;
+
 interface LoginPresenter {
 
   void onLoginClick(String id, String pw);
@@ -28,8 +30,10 @@ interface LoginPresenter {
 
     void hideLoading();
 
-    void showUpdateAlert(String title, String message);
+    void showUpdateAlert(VersionCheck version);
 
     void navigateToExternalAppCenter();
+
+    void exitApp();
   }
 }

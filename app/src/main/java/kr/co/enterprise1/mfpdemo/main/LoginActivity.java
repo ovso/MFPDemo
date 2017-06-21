@@ -15,6 +15,7 @@ import butterknife.OnClick;
 import kr.co.enterprise1.mfpdemo.R;
 import kr.co.enterprise1.mfpdemo.common.AbsBaseActivity;
 import kr.co.enterprise1.mfpdemo.home.HomeActivity;
+import kr.co.enterprise1.mfpdemo.main.vo.VersionCheck;
 
 public class LoginActivity extends AbsBaseActivity implements LoginPresenter.View {
   @BindView(R.id.id_edittext) TextInputEditText mIdEditText;
@@ -81,14 +82,17 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
     mLoadingProgressBar.setVisibility(View.GONE);
   }
 
-  @Override public void showUpdateAlert(String title, String message) {
+  @Override public void showUpdateAlert(VersionCheck version) {
     Runnable runnable = () -> {
-      new AlertDialog.Builder(LoginActivity.this).setTitle(title)
-          .setMessage(message)
-          .setNegativeButton(android.R.string.cancel, null)
-          .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-            mPresenter.onUpdateClick();
+      new AlertDialog.Builder(LoginActivity.this).setTitle(version.getTitle())
+          .setMessage(version.getMessage())
+          .setCancelable(!version.isForce_update())
+          .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+            if (version.isForce_update()) {
+              LoginActivity.this.finish();
+            }
           })
+          .setPositiveButton(android.R.string.ok, (dialog, which) -> mPresenter.onUpdateClick())
           .show();
     };
     runOnUiThread(runnable);
@@ -100,9 +104,12 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
     try {
       startActivity(intent);
     } catch (ActivityNotFoundException e) {
-      Snackbar.make(mRootView, R.string.please_install_appcenter,
-          Snackbar.LENGTH_SHORT).show();
+      Snackbar.make(mRootView, R.string.please_install_appcenter, Snackbar.LENGTH_SHORT).show();
     }
+  }
+
+  @Override public void exitApp() {
+    finish();
   }
 
   @Override protected void onStart() {
