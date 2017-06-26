@@ -145,6 +145,10 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
 
             @Override public void onFailure(WLFailResponse wlFailResponse) {
               Log.d(securityCheckName, "Login Preemptive Failure");
+              Intent intent = new Intent();
+              intent.setAction(Constants.ACTION_LOGIN_FAILURE);
+              intent.putExtra("errorMsg", "UserLogin : Login Preemptive Failure");
+              broadcastManager.sendBroadcast(intent);
             }
           });
     }

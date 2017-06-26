@@ -1,14 +1,11 @@
 package kr.co.enterprise1.mfpdemo.app;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.ContextWrapper;
 import com.facebook.stetho.Stetho;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.common.Constants;
-import lombok.Getter;
-import lombok.Synchronized;
 
 public class MyApplication extends Application {
 

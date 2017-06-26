@@ -22,7 +22,7 @@ class LoginPresenterImpl implements LoginPresenter {
   }
 
   @Override public void onCreate() {
-    versionCheckInteractor.check();
+    // versionCheckInteractor.check();
   }
 
   @Override public void onUpdateClick() {
@@ -64,7 +64,8 @@ class LoginPresenterImpl implements LoginPresenter {
       }
 
       @Override public void onLoginFailure(String errorMsg) {
-        view.showErrorAlert("!", errorMsg);
+        //view.showErrorAlert("!", errorMsg);
+        view.showErrorSnackbar(errorMsg);
       }
 
       @Override public void onLoginRequired(String errorMsg, int remaningAttempts) {

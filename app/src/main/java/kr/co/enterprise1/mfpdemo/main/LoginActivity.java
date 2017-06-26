@@ -56,6 +56,10 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
         Snackbar.LENGTH_SHORT).show();
   }
 
+  @Override public void showErrorSnackbar(String errorMsg) {
+    Snackbar.make(mRootView, errorMsg, Snackbar.LENGTH_LONG).show();
+  }
+
   @Override public void showErrorAlert(String title, String errorMsg) {
     new AlertDialog.Builder(this).setTitle(title)
         .setMessage(errorMsg)

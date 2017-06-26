@@ -22,6 +22,8 @@ interface LoginPresenter {
 
     void showErrorSnackbar(String errorMsg, int remainingAttemps);
 
+    void showErrorSnackbar(String errorMsg);
+
     void showErrorAlert(String title, String errorMsg);
 
     void navigateToHome();
