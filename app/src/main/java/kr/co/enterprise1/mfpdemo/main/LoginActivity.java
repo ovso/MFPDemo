@@ -122,11 +122,10 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   }
 
   @Override public void showNotificationsAlert(String title, String message) {
-    Runnable runnable = () -> new AlertDialog.Builder(LoginActivity.this).setTitle(title)
+    new AlertDialog.Builder(LoginActivity.this).setTitle(title)
         .setMessage(message)
         .setPositiveButton(android.R.string.ok, null)
         .show();
-    runOnUiThread(runnable);
   }
 
   @Override protected void onStart() {

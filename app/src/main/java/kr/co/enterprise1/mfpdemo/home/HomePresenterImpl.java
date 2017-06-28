@@ -1,10 +1,13 @@
 package kr.co.enterprise1.mfpdemo.home;
 
 import android.content.Context;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.app.MyApplication;
 
-class HomePresenterImpl implements HomePresenter {
+class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
 
   private HomePresenter.View view;
   private LogoutHandler logoutHandler;
@@ -31,11 +34,13 @@ class HomePresenterImpl implements HomePresenter {
   }
 
   @Override public void onStart() {
+    MFPPush.getInstance().listen(this);
     logoutHandler.registerReceiver();
   }
 
   @Override public void onPause() {
     logoutHandler.unregisterReceiver();
+    MFPPush.getInstance().hold();
   }
 
   @Override public void onBackPressed() {
@@ -44,5 +49,15 @@ class HomePresenterImpl implements HomePresenter {
 
   @Override public void onLogoutDialogOkClick() {
     logoutHandler.logout();
+  }
+
+  @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {
+    String alert = "Alert: " + mfpSimplePushNotification.getAlert();
+    String alertID = "ID: " + mfpSimplePushNotification.getId();
+    String alertPayload = "Payload: " + mfpSimplePushNotification.getPayload();
+
+    // Show the received notification in an AlertDialog
+    view.showNotificationsAlert("Push Notifications", alert + "\n" + alertID + "\n" + alertPayload);
+
   }
 }

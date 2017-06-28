@@ -23,5 +23,7 @@ interface HomePresenter {
     void navigateToLogin();
 
     void showLogoutAlert(String title, String message);
+
+    void showNotificationsAlert(String title, String message);
   }
 }

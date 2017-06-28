@@ -56,6 +56,14 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
         .show();
   }
 
+  @Override public void showNotificationsAlert(String title, String message) {
+    new AlertDialog.Builder(HomeActivity.this).setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(android.R.string.ok, null)
+        .show();
+
+  }
+
   @Override public void onBackPressed() {
     //super.onBackPressed();
     mPresenter.onBackPressed();
