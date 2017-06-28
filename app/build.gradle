@@ -17,11 +17,6 @@ android {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-/*
-    debug {
-      applicationIdSuffix ".debug"
-    }
-*/
   }
   packagingOptions {
     pickFirst 'META-INF/ASL2.0'
@@ -43,6 +38,7 @@ dependencies {
 
   compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibVer"
   compile "com.android.support:design:$rootProject.ext.supportLibVer"
+  compile "com.android.support:preference-v7:$rootProject.ext.supportLibVer"
 
   compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
