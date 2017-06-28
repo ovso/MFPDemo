@@ -1,6 +1,8 @@
 package kr.co.enterprise1.mfpdemo.main;
 
 import android.content.Context;
+import android.util.Log;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.worklight.wlclient.api.WLClient;
 
 class LoginPresenterImpl implements LoginPresenter {

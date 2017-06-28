@@ -3,6 +3,7 @@ package kr.co.enterprise1.mfpdemo.app;
 import android.app.Application;
 import android.content.ContextWrapper;
 import com.facebook.stetho.Stetho;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.common.Constants;
@@ -27,6 +28,7 @@ public class MyApplication extends Application {
 
   private void initWLClient() {
     WLClient.createInstance(this);
+    MFPPush.getInstance().initialize(this);
   }
 
   private void initPreferences() {

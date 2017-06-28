@@ -37,5 +37,7 @@ interface LoginPresenter {
     void navigateToExternalAppCenter();
 
     void exitApp();
+
+    void showNotificationsAlert(String title, String message);
   }
 }
