@@ -28,21 +28,6 @@ public class SettingFragmentPresenterImpl
 
   @Override public void onCreatePreferences(Preference notifications) {
     view.addListener();
-    MFPPush.getInstance().getTags(new MFPPushResponseListener<List<String>>() {
-      @Override public void onSuccess(List<String> strings) {
-        model.setTagNames(strings.toArray(new String[strings.size()]));
-        if (model.getTagNames().length > 0) {
-          view.setTagEntries(model.getTagNames());
-        } else {
-          view.disableTags();
-        }
-        view.hideLoading();
-      }
-
-      @Override public void onFailure(MFPPushException e) {
-        view.hideLoading();
-      }
-    });
     if (((SwitchPreference) notifications).isChecked()) {
       registerDevice();
     }
@@ -87,7 +72,7 @@ public class SettingFragmentPresenterImpl
           .unsubscribe(model.getTagNames(), new MFPPushResponseListener<String[]>() {
             @Override public void onSuccess(String[] tagNames) {
               view.hideLoading();
-              setTagSummary(new String[]{});
+              setTagSummary(new String[]{"Push.ALL"});
             }
 
             @Override public void onFailure(MFPPushException e) {
