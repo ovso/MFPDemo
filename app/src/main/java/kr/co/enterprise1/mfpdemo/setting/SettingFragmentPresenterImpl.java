@@ -28,7 +28,6 @@ public class SettingFragmentPresenterImpl
 
   @Override public void onCreatePreferences(Preference notifications) {
     view.addListener();
-    view.showLoading();
     MFPPush.getInstance().getTags(new MFPPushResponseListener<List<String>>() {
       @Override public void onSuccess(List<String> strings) {
         model.setTagNames(strings.toArray(new String[strings.size()]));
@@ -50,7 +49,7 @@ public class SettingFragmentPresenterImpl
   }
 
   @Override public void onNotificationsPreferenceChange(boolean value) {
-    view.showLoading();
+
     if (value) {
       if (MFPPush.getInstance().isPushSupported()) {
         registerDevice();
@@ -88,7 +87,7 @@ public class SettingFragmentPresenterImpl
           .unsubscribe(model.getTagNames(), new MFPPushResponseListener<String[]>() {
             @Override public void onSuccess(String[] tagNames) {
               view.hideLoading();
-              setTagSummary(tagNames);
+              setTagSummary(new String[]{});
             }
 
             @Override public void onFailure(MFPPushException e) {
@@ -107,6 +106,7 @@ public class SettingFragmentPresenterImpl
   }
 
   private void unRegisterDevice() {
+    view.showLoading();
     MFPPush.getInstance().unregisterDevice(new MFPPushResponseListener<String>() {
       @Override public void onSuccess(String s) {
         Log.d(TAG, "response = " + s);
@@ -124,12 +124,29 @@ public class SettingFragmentPresenterImpl
   }
 
   private void registerDevice() {
+    view.showLoading();
     MFPPush.getInstance().registerDevice(null, new MFPPushResponseListener<String>() {
       @Override public void onSuccess(String s) {
         Log.d(TAG, "response = " + s);
         view.showOnSwitch();
-        view.hideLoading();
-        view.enableTags();
+
+        MFPPush.getInstance().getTags(new MFPPushResponseListener<List<String>>() {
+          @Override public void onSuccess(List<String> strings) {
+            model.setTagNames(strings.toArray(new String[strings.size()]));
+            if (model.getTagNames().length > 0) {
+              view.setTagEntries(model.getTagNames());
+              view.enableTags();
+            } else {
+              view.disableTags();
+            }
+            view.hideLoading();
+          }
+
+          @Override public void onFailure(MFPPushException e) {
+            view.hideLoading();
+            view.disableTags();
+          }
+        });
       }
 
       @Override public void onFailure(MFPPushException e) {
