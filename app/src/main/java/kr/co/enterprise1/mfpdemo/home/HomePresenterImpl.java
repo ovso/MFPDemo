@@ -1,6 +1,7 @@
 package kr.co.enterprise1.mfpdemo.home;
 
 import android.content.Context;
+import android.util.Log;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
@@ -9,6 +10,7 @@ import kr.co.enterprise1.mfpdemo.app.MyApplication;
 
 class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
 
+  private static final String TAG = "HomePresenterImpl";
   private HomePresenter.View view;
   private LogoutHandler logoutHandler;
   private HomeModel model;
@@ -52,12 +54,15 @@ class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
   }
 
   @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {
+    Log.i("Push Notifications", mfpSimplePushNotification.getAlert());
+
     String alert = "Alert: " + mfpSimplePushNotification.getAlert();
     String alertID = "ID: " + mfpSimplePushNotification.getId();
     String alertPayload = "Payload: " + mfpSimplePushNotification.getPayload();
-
+    Log.d(TAG,
+        "alert = " + alert + " \n" + "ID = " + alertID + "\n" + "alertPayload = " + alertPayload);
     // Show the received notification in an AlertDialog
-    view.showNotificationsAlert("Push Notifications", alert + "\n" + alertID + "\n" + alertPayload);
+    view.showNotificationsAlert("Push Notifications", mfpSimplePushNotification.getAlert());
 
   }
 }

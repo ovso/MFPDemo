@@ -1,5 +1,7 @@
 package kr.co.enterprise1.mfpdemo.setting;
 
+import java.util.List;
+
 /**
  * Created by jaeho on 2017. 6. 28
  */
@@ -12,6 +14,8 @@ public interface SettingFragmentPresenter {
   void onPause();
 
   void onResume();
+
+  void onTagsNotificationsPreferencChange(Object object);
 
   interface View {
 
@@ -26,5 +30,11 @@ public interface SettingFragmentPresenter {
     void hideLoading();
 
     void showLoading();
+
+    void disableTags();
+
+    void enableTags();
+
+    void setTagEntries(String[] tags);
   }
 }

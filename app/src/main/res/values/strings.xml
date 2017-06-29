@@ -14,6 +14,6 @@
   <string name="not_notifications">알림을 받지 않습니다.</string>
   <string name="ok_notifications">알림을 받습니다.</string>
   <string name="notifications">알림</string>
-  <string name="tags_notifications">태그별 알림</string>
+  <string name="tags_notifications">태그 알림</string>
   <string name="loading">잠시만 기다려 주세요.</string>
 </resources>

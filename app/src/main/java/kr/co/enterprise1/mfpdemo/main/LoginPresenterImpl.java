@@ -1,12 +1,14 @@
 package kr.co.enterprise1.mfpdemo.main;
 
 import android.content.Context;
+import android.util.Log;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.worklight.wlclient.api.WLClient;
 
 class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener {
+  private static final String TAG = "LoginPresenterImpl";
   //private final static String TAG = "LoginPresenterImpl";
   private LoginPresenter.View view;
   private LoginInteractor loginInteractor;
@@ -96,12 +98,14 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   }
 
   @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {
+    Log.i("Push Notifications", mfpSimplePushNotification.getAlert());
+
     String alert = "Alert: " + mfpSimplePushNotification.getAlert();
     String alertID = "ID: " + mfpSimplePushNotification.getId();
     String alertPayload = "Payload: " + mfpSimplePushNotification.getPayload();
-
+    Log.d(TAG,
+        "alert = " + alert + " \n" + "ID = " + alertID + "\n" + "alertPayload = " + alertPayload);
     // Show the received notification in an AlertDialog
-    view.showNotificationsAlert("Push Notifications", alert + "\n" + alertID + "\n" + alertPayload);
-
+    view.showNotificationsAlert("Push Notifications", mfpSimplePushNotification.getAlert());
   }
 }

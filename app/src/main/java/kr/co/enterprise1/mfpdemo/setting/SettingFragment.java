@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.Preference;
+import android.preference.MultiSelectListPreference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import java.util.ArrayList;
+import java.util.HashSet;
 import kr.co.enterprise1.mfpdemo.R;
 
 /**
@@ -26,10 +28,22 @@ public class SettingFragment extends PreferenceFragment implements SettingFragme
   }
 
   private SwitchPreference mNotificationsPreference;
+  private MultiSelectListPreference mTagsNotificationsListPreference;
 
   @Override public void addListener() {
     mNotificationsPreference = (SwitchPreference) findPreference("notifications");
-    mNotificationsPreference.setOnPreferenceChangeListener(onPreferenceChangeListener());
+    mNotificationsPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+      mPresenter.onNotificationsPreferenceChange(Boolean.valueOf(String.valueOf(newValue)));
+      return true;
+    });
+    mTagsNotificationsListPreference = (MultiSelectListPreference) findPreference("tags");
+    mTagsNotificationsListPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+      mPresenter.onTagsNotificationsPreferencChange(newValue);
+      return true;
+    });
+    if (!mNotificationsPreference.isChecked()) {
+      disableTags();
+    }
   }
 
   @Override public void hideLoading() {
@@ -47,11 +61,19 @@ public class SettingFragment extends PreferenceFragment implements SettingFragme
     mLoading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
   }
 
-  private Preference.OnPreferenceChangeListener onPreferenceChangeListener() {
-    return (preference, newValue) -> {
-      mPresenter.onNotificationsPreferenceChange(Boolean.valueOf(String.valueOf(newValue)));
-      return true;
-    };
+  @Override public void disableTags() {
+    Runnable run = () -> mTagsNotificationsListPreference.setEnabled(false);
+    getActivity().runOnUiThread(run);
+  }
+
+  @Override public void enableTags() {
+    Runnable run = () -> mTagsNotificationsListPreference.setEnabled(true);
+    getActivity().runOnUiThread(run);
+  }
+
+  @Override public void setTagEntries(String[] tags) {
+    mTagsNotificationsListPreference.setEntries(tags);
+    mTagsNotificationsListPreference.setEntryValues(tags);
   }
 
   @Override public void showNotificationsAlert(String title, String message) {
