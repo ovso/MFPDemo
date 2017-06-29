@@ -1,5 +1,6 @@
 package kr.co.enterprise1.mfpdemo.setting;
 
+import android.preference.Preference;
 import java.util.List;
 
 /**
@@ -7,7 +8,6 @@ import java.util.List;
  */
 
 public interface SettingFragmentPresenter {
-  void onCreatePreferences();
 
   void onNotificationsPreferenceChange(boolean value);
 
@@ -16,6 +16,8 @@ public interface SettingFragmentPresenter {
   void onResume();
 
   void onTagsNotificationsPreferencChange(Object object);
+
+  void onCreatePreferences(Preference notifications);
 
   interface View {
 
@@ -36,5 +38,7 @@ public interface SettingFragmentPresenter {
     void enableTags();
 
     void setTagEntries(String[] tags);
+
+    void setTagSummary(String summary);
   }
 }

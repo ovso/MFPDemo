@@ -9,8 +9,6 @@ import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import java.util.ArrayList;
-import java.util.HashSet;
 import kr.co.enterprise1.mfpdemo.R;
 
 /**
@@ -24,7 +22,7 @@ public class SettingFragment extends PreferenceFragment implements SettingFragme
     super.onCreate(savedInstanceState);
     addPreferencesFromResource(R.xml.preferences_setting);
     mPresenter = new SettingFragmentPresenterImpl(this);
-    mPresenter.onCreatePreferences();
+    mPresenter.onCreatePreferences(findPreference("notifications"));
   }
 
   private SwitchPreference mNotificationsPreference;
@@ -74,6 +72,11 @@ public class SettingFragment extends PreferenceFragment implements SettingFragme
   @Override public void setTagEntries(String[] tags) {
     mTagsNotificationsListPreference.setEntries(tags);
     mTagsNotificationsListPreference.setEntryValues(tags);
+  }
+
+  @Override public void setTagSummary(String summary) {
+    Runnable run = () -> mTagsNotificationsListPreference.setSummary(summary);
+    getActivity().runOnUiThread(run);
   }
 
   @Override public void showNotificationsAlert(String title, String message) {

@@ -1,5 +1,7 @@
 package kr.co.enterprise1.mfpdemo.setting;
 
+import android.preference.Preference;
+import android.preference.SwitchPreference;
 import android.util.Log;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushException;
@@ -24,7 +26,7 @@ public class SettingFragmentPresenterImpl
     model = new SettingModel();
   }
 
-  @Override public void onCreatePreferences() {
+  @Override public void onCreatePreferences(Preference notifications) {
     view.addListener();
     view.showLoading();
     MFPPush.getInstance().getTags(new MFPPushResponseListener<List<String>>() {
@@ -42,6 +44,9 @@ public class SettingFragmentPresenterImpl
         view.hideLoading();
       }
     });
+    if (((SwitchPreference) notifications).isChecked()) {
+      registerDevice();
+    }
   }
 
   @Override public void onNotificationsPreferenceChange(boolean value) {
@@ -69,8 +74,9 @@ public class SettingFragmentPresenterImpl
     if (hashSet.size() > 0) {
       String[] tagNames = hashSet.toArray(new String[hashSet.size()]);
       MFPPush.getInstance().subscribe(tagNames, new MFPPushResponseListener<String[]>() {
-        @Override public void onSuccess(String[] strings) {
+        @Override public void onSuccess(String[] tagNames) {
           view.hideLoading();
+          setTagSummary(tagNames);
         }
 
         @Override public void onFailure(MFPPushException e) {
@@ -80,8 +86,9 @@ public class SettingFragmentPresenterImpl
     } else {
       MFPPush.getInstance()
           .unsubscribe(model.getTagNames(), new MFPPushResponseListener<String[]>() {
-            @Override public void onSuccess(String[] strings) {
+            @Override public void onSuccess(String[] tagNames) {
               view.hideLoading();
+              setTagSummary(tagNames);
             }
 
             @Override public void onFailure(MFPPushException e) {
@@ -89,6 +96,14 @@ public class SettingFragmentPresenterImpl
             }
           });
     }
+  }
+
+  private void setTagSummary(String[] tagNames) {
+    String summary = "";
+    for (String tagName : tagNames) {
+      summary += (", " + tagName);
+    }
+    view.setTagSummary(summary);
   }
 
   private void unRegisterDevice() {
