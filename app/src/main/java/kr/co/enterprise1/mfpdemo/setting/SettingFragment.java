@@ -1,31 +1,55 @@
 package kr.co.enterprise1.mfpdemo.setting;
 
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import kr.co.enterprise1.mfpdemo.R;
 
 /**
  * Created by jaeho on 2017. 6. 28
  */
 
-public class SettingFragment extends PreferenceFragmentCompat
-    implements SettingFragmentPresenter.View {
+public class SettingFragment extends PreferenceFragment implements SettingFragmentPresenter.View {
   private SettingFragmentPresenter mPresenter;
 
-  @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    setPreferencesFromResource(R.xml.preferences_setting, null);
-    Preference notificationsPreference = findPreference("notifications");
-    notificationsPreference.setOnPreferenceChangeListener(onPreferenceChangeListener());
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    addPreferencesFromResource(R.xml.preferences_setting);
     mPresenter = new SettingFragmentPresenterImpl(this);
     mPresenter.onCreatePreferences();
   }
 
+  private SwitchPreference mNotificationsPreference;
+
+  @Override public void addListener() {
+    mNotificationsPreference = (SwitchPreference) findPreference("notifications");
+    mNotificationsPreference.setOnPreferenceChangeListener(onPreferenceChangeListener());
+  }
+
+  @Override public void hideLoading() {
+    if (mLoading != null) {
+      mLoading.dismiss();
+      mLoading = null;
+    }
+  }
+
+  private ProgressDialog mLoading;
+
+  @Override public void showLoading() {
+    mLoading = ProgressDialog.show(getActivity(), "", "");
+    mLoading.setContentView(R.layout.loading);
+    mLoading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+  }
+
   private Preference.OnPreferenceChangeListener onPreferenceChangeListener() {
     return (preference, newValue) -> {
-      mPresenter.onPreferenceChange(Boolean.valueOf(String.valueOf(newValue)));
+      mPresenter.onNotificationsPreferenceChange(Boolean.valueOf(String.valueOf(newValue)));
       return true;
     };
   }
@@ -35,19 +59,22 @@ public class SettingFragment extends PreferenceFragmentCompat
         .setMessage(message)
         .setPositiveButton(android.R.string.ok, null)
         .show();
-    //Toast.makeText(getContext(), title + ", " + message, Toast.LENGTH_SHORT).show();
   }
 
   @Override public void showOnSwitch() {
-    SwitchPreferenceCompat switchPreferenceCompat =
-        (SwitchPreferenceCompat) findPreference("notifications");
-    switchPreferenceCompat.setChecked(true);
+    Runnable run = () -> {
+      mNotificationsPreference.setChecked(true);
+      mNotificationsPreference.setSummary(R.string.ok_notifications);
+    };
+    getActivity().runOnUiThread(run);
   }
 
   @Override public void showOffSwitch() {
-    SwitchPreferenceCompat switchPreferenceCompat =
-        (SwitchPreferenceCompat) findPreference("notifications");
-    switchPreferenceCompat.setChecked(false);
+    Runnable run = () -> {
+      mNotificationsPreference.setChecked(false);
+      mNotificationsPreference.setSummary(R.string.not_notifications);
+    };
+    getActivity().runOnUiThread(run);
   }
 
   @Override public void onResume() {

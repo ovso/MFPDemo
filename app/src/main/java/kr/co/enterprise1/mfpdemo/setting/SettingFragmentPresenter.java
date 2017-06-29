@@ -7,7 +7,7 @@ package kr.co.enterprise1.mfpdemo.setting;
 public interface SettingFragmentPresenter {
   void onCreatePreferences();
 
-  void onPreferenceChange(Boolean value);
+  void onNotificationsPreferenceChange(boolean value);
 
   void onPause();
 
@@ -20,5 +20,11 @@ public interface SettingFragmentPresenter {
     void showOnSwitch();
 
     void showOffSwitch();
+
+    void addListener();
+
+    void hideLoading();
+
+    void showLoading();
   }
 }

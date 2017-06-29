@@ -13,7 +13,7 @@ public class SettingActivity extends AppCompatActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_setting);
-    getSupportFragmentManager().beginTransaction()
+    getFragmentManager().beginTransaction()
         .add(R.id.container, new SettingFragment())
         .commit();
   }

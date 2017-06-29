@@ -21,9 +21,11 @@ public class SettingFragmentPresenterImpl
   }
 
   @Override public void onCreatePreferences() {
+    view.addListener();
   }
 
-  @Override public void onPreferenceChange(Boolean value) {
+  @Override public void onNotificationsPreferenceChange(boolean value) {
+    view.showLoading();
     if (value) {
       if (MFPPush.getInstance().isPushSupported()) {
         registerDevice();
@@ -46,11 +48,13 @@ public class SettingFragmentPresenterImpl
       @Override public void onSuccess(String s) {
         Log.d(TAG, "response = " + s);
         view.showOffSwitch();
+        view.hideLoading();
       }
 
       @Override public void onFailure(MFPPushException e) {
         e.printStackTrace();
         view.showOffSwitch();
+        view.hideLoading();
       }
     });
   }
@@ -60,11 +64,13 @@ public class SettingFragmentPresenterImpl
       @Override public void onSuccess(String s) {
         Log.d(TAG, "response = " + s);
         view.showOnSwitch();
+        view.hideLoading();
       }
 
       @Override public void onFailure(MFPPushException e) {
         e.printStackTrace();
         view.showOffSwitch();
+        view.hideLoading();
       }
     });
   }
