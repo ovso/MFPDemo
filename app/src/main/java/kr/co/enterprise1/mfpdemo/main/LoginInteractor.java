@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import kr.co.enterprise1.mfpdemo.common.Constants;
 import lombok.Setter;
 import org.json.JSONException;

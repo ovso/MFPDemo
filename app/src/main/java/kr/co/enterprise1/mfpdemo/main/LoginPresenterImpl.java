@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
+import com.worklight.common.WLAnalytics;
 import com.worklight.wlclient.api.WLClient;
 
 class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener {
