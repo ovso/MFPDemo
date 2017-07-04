@@ -78,4 +78,9 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
     super.onPause();
     mPresenter.onPause();
   }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mPresenter.onDestroy();
+  }
 }

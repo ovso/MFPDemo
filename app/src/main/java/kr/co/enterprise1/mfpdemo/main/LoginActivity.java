@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.OnClick;
 import kr.co.enterprise1.mfpdemo.R;
+import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.AbsBaseActivity;
 import kr.co.enterprise1.mfpdemo.home.HomeActivity;
 import kr.co.enterprise1.mfpdemo.main.vo.VersionCheck;
@@ -113,6 +114,7 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   }
 
   @OnClick(R.id.setting_button) void onSettingClick() {
+    Analytics.getInstance().log("LoginScreen", "setting", "setting");
     Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
     startActivity(intent);
   }
@@ -136,5 +138,10 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   @Override protected void onPause() {
     super.onPause();
     mPresenter.onPause();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mPresenter.onDestroy();
   }
 }

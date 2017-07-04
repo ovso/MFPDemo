@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import kr.co.enterprise1.mfpdemo.R;
+import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.Constants;
 import lombok.Setter;
 
@@ -26,6 +27,7 @@ class LogoutHandler {
   private BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       onLogoutListener.onLogoutSuccess();
+      Analytics.getInstance().logout();
     }
   };
 

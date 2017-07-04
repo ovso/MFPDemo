@@ -17,6 +17,8 @@ interface HomePresenter {
 
   void onLogoutDialogOkClick();
 
+  void onDestroy();
+
   interface View {
     void showHello(String text);
 

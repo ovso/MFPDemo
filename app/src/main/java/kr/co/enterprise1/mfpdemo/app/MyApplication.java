@@ -30,7 +30,9 @@ public class MyApplication extends Application {
   private void initWLClient() {
     WLClient.createInstance(this);
     MFPPush.getInstance().initialize(this);
-    Analytics.init(this);
+    Analytics.getInstance().initialize(this);
+    //WLAnalytics.init(this);
+
   }
 
   private void initPreferences() {

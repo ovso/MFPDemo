@@ -1,12 +1,18 @@
 package kr.co.enterprise1.mfpdemo.main;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.worklight.common.WLAnalytics;
 import com.worklight.wlclient.api.WLClient;
+import kr.co.enterprise1.mfpdemo.analytics.Analytics;
+import kr.co.enterprise1.mfpdemo.common.Constants;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener {
   private static final String TAG = "LoginPresenterImpl";
@@ -29,11 +35,17 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
 
   @Override public void onCreate() {
     // versionCheckInteractor.check();
+    Analytics.getInstance().addDeviceEventListener();
   }
 
   @Override public void onUpdateClick() {
     view.navigateToExternalAppCenter();
     view.exitApp();
+  }
+
+  @Override public void onDestroy() {
+    Analytics.getInstance().removeDeviceEventListener();
+    Analytics.getInstance().send();
   }
 
   private VersionCheckInteractor.OnVersionCheckListener onVersionCheckListener() {
@@ -59,6 +71,8 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
       @Override public void pass(String id, String pw) {
         view.showLoading();
         loginInteractor.login(id, pw);
+        Analytics.getInstance().log("LoginScreen", "login", "login");
+
       }
     };
   }
@@ -67,6 +81,17 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
     return new LoginInteractor.OnLoginResultListener() {
       @Override public void onLoginSuccess() {
         view.navigateToHome();
+        //Prefs.putString(Constants.PREFERENCES_KEY_USER, identity.getJSONObject("user").toString());
+        String userInfo = Prefs.getString(Constants.PREFERENCES_KEY_USER, null);
+        if (!TextUtils.isEmpty(userInfo)) {
+          try {
+            JSONObject userJson = new JSONObject(userInfo);
+            String id = userJson.getString("id");
+            Analytics.getInstance().login(id);
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
+        }
       }
 
       @Override public void onLoginFailure(String errorMsg) {
