@@ -1,12 +1,10 @@
 package kr.co.enterprise1.mfpdemo.app;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.squareup.otto.Subscribe;
 import com.worklight.wlclient.api.WLAuthorizationManager;
 import com.worklight.wlclient.api.WLClient;
 import com.worklight.wlclient.api.WLFailResponse;
@@ -14,6 +12,14 @@ import com.worklight.wlclient.api.WLLoginResponseListener;
 import com.worklight.wlclient.api.WLLogoutResponseListener;
 import com.worklight.wlclient.api.challengehandler.SecurityCheckChallengeHandler;
 import kr.co.enterprise1.mfpdemo.common.Constants;
+import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginFailureEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginRequiredEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginSuccessEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LogoutEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LogoutFailureEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LogoutSuccessEvent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,35 +45,29 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
   private String errorMsg = "";
   //private Context context;
   private boolean isChallenged = false;
-
-  private LocalBroadcastManager broadcastManager;
+  private Handler handler;
 
   private UserLoginChallengeHandler() {
     super(securityCheckName);
-    Context context = WLClient.getInstance().getContext();
-    broadcastManager = LocalBroadcastManager.getInstance(context);
-
     //Reset the current user
     Prefs.remove(Constants.PREFERENCES_KEY_USER);
+    BusProvider.getInstance().register(this);
+    handler = new Handler(Looper.getMainLooper());
+  }
 
-    //Receive login requests
-    broadcastManager.registerReceiver(new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        try {
-          JSONObject credentials = new JSONObject(intent.getStringExtra("credentials"));
-          login(credentials);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-      }
-    }, new IntentFilter(Constants.ACTION_LOGIN));
+  @Subscribe public void onLogoutEvent(LogoutEvent event) {
+    logout();
+  }
 
-    //Receive logout requests
-    broadcastManager.registerReceiver(new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        logout();
-      }
-    }, new IntentFilter(Constants.ACTION_LOGOUT));
+  @Subscribe public void onLoginEvent(LoginEvent event) {
+    try {
+      JSONObject credentials = new JSONObject();
+      credentials.put("username", event.getId());
+      credentials.put("password", event.getPw());
+      new Thread(() -> login(credentials)).start();
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
   }
 
   static UserLoginChallengeHandler createAndRegister() {
@@ -91,11 +91,8 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
       e.printStackTrace();
     }
 
-    Intent intent = new Intent();
-    intent.setAction(Constants.ACTION_LOGIN_REQUIRED);
-    intent.putExtra("errorMsg", errorMsg);
-    intent.putExtra("remainingAttempts", remainingAttempts);
-    broadcastManager.sendBroadcast(intent);
+    handler.post(
+        () -> BusProvider.getInstance().post(new LoginRequiredEvent(errorMsg, remainingAttempts)));
   }
 
   @Override public void handleFailure(JSONObject error) {
@@ -110,10 +107,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
         e.printStackTrace();
       }
     }
-    Intent intent = new Intent();
-    intent.setAction(Constants.ACTION_LOGIN_FAILURE);
-    intent.putExtra("errorMsg", errorMsg);
-    broadcastManager.sendBroadcast(intent);
+    handler.post(() -> BusProvider.getInstance().post(new LoginFailureEvent(errorMsg)));
     Log.d(securityCheckName, "handleFailure");
   }
 
@@ -126,10 +120,8 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     } catch (JSONException e) {
       e.printStackTrace();
     }
+    handler.post(() -> BusProvider.getInstance().post(new LoginSuccessEvent()));
 
-    Intent intent = new Intent();
-    intent.setAction(Constants.ACTION_LOGIN_SUCCESS);
-    broadcastManager.sendBroadcast(intent);
     Log.d(securityCheckName, "handleSuccess");
   }
 
@@ -145,10 +137,8 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
 
             @Override public void onFailure(WLFailResponse wlFailResponse) {
               Log.d(securityCheckName, "Login Preemptive Failure");
-              Intent intent = new Intent();
-              intent.setAction(Constants.ACTION_LOGIN_FAILURE);
-              intent.putExtra("errorMsg", "UserLogin : Login Preemptive Failure");
-              broadcastManager.sendBroadcast(intent);
+              String errorMsg = "UserLogin : Login Preemptive Failure";
+              handler.post(() -> BusProvider.getInstance().post(new LoginFailureEvent(errorMsg)));
             }
           });
     }
@@ -158,16 +148,12 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     WLAuthorizationManager.getInstance().logout(securityCheckName, new WLLogoutResponseListener() {
       @Override public void onSuccess() {
         Log.d(securityCheckName, "Logout Success");
-        Intent intent = new Intent();
-        intent.setAction(Constants.ACTION_LOGOUT_SUCCESS);
-        broadcastManager.sendBroadcast(intent);
+        handler.post(() -> BusProvider.getInstance().post(new LogoutSuccessEvent()));
       }
 
       @Override public void onFailure(WLFailResponse wlFailResponse) {
         Log.d(securityCheckName, "Logout Failure");
-        Intent intent = new Intent();
-        intent.setAction(Constants.ACTION_LOGOUT_FAILURE);
-        broadcastManager.sendBroadcast(intent);
+        handler.post(() -> BusProvider.getInstance().post(new LogoutFailureEvent()));
       }
     });
   }

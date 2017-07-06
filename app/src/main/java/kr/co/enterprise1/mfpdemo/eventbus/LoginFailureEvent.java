@@ -7,7 +7,6 @@ import lombok.Getter;
  * Created by jaeho on 2017. 7. 6
  */
 
-@AllArgsConstructor public class LoginEvent {
-  @Getter private String id;
-  @Getter private String pw;
+@AllArgsConstructor public class LoginFailureEvent {
+  @Getter private String errorMsg;
 }

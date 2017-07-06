@@ -3,13 +3,15 @@ package kr.co.enterprise1.mfpdemo.main;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import com.squareup.otto.Subscribe;
 import com.worklight.wlclient.api.WLAuthorizationManager;
-import kr.co.enterprise1.mfpdemo.common.Constants;
+import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginFailureEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginRequiredEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginSuccessEvent;
 import lombok.Setter;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 class LoginRequestInteractor {
   private final static String TAG = "LoginRequestInteractor";
@@ -41,38 +43,36 @@ class LoginRequestInteractor {
   };
 
   void registerReceiver() {
-    localBroadcastManager.registerReceiver(loginRequiredReceiver,
-        new IntentFilter(Constants.ACTION_LOGIN_REQUIRED));
-    localBroadcastManager.registerReceiver(loginErrorReceiver,
-        new IntentFilter(Constants.ACTION_LOGIN_FAILURE));
-    localBroadcastManager.registerReceiver(loginSuccessReceiver,
-        new IntentFilter(Constants.ACTION_LOGIN_SUCCESS));
+    BusProvider.getInstance().register(this);
   }
 
   void unregisterReceiver() {
-    localBroadcastManager.unregisterReceiver(loginRequiredReceiver);
-    localBroadcastManager.unregisterReceiver(loginErrorReceiver);
-    localBroadcastManager.unregisterReceiver(loginSuccessReceiver);
+    BusProvider.getInstance().unregister(this);
+  }
+
+  @Subscribe public void onLoginRequiredEvent(LoginRequiredEvent event) {
+    onLoginResultListener.onLoginRequired(event.getErrorMsg(), event.getRemainingAttempts());
+    onLoginResultListener.onLoginFinished();
+  }
+
+  @Subscribe public void onLoginSuccessEvent(LoginSuccessEvent event) {
+    onLoginResultListener.onLoginSuccess();
+    onLoginResultListener.onLoginFinished();
+  }
+
+  @Subscribe public void onLoginFailureEvent(LoginFailureEvent event) {
+    onLoginResultListener.onLoginFailure(event.getErrorMsg());
+    onLoginResultListener.onLoginFinished();
   }
 
   void login(String id, String pw) {
-    JSONObject credentials = new JSONObject();
-    try {
-      credentials.put("username", id);
-      credentials.put("password", pw);
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    Intent intent = new Intent(Constants.ACTION_LOGIN);
-    intent.putExtra("credentials", credentials.toString());
-    localBroadcastManager.sendBroadcast(intent);
+    BusProvider.getInstance().post(new LoginEvent(id, pw));
   }
 
   @Setter private OnLoginResultListener onLoginResultListener;
 
   public void autoLogin() {
-    WLAuthorizationManager.getInstance()
-        .obtainAccessToken(null, null);
+    WLAuthorizationManager.getInstance().obtainAccessToken(null, null);
   }
 
   interface OnLoginResultListener {

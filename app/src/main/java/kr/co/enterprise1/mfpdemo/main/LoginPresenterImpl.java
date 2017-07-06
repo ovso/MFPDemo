@@ -112,13 +112,17 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   }
 
   @Override public void onStart() {
-    loginRequestInteractor.registerReceiver();
-    MFPPush.getInstance().listen(this);
+
   }
 
   @Override public void onPause() {
-    loginRequestInteractor.unregisterReceiver();
     MFPPush.getInstance().hold();
+    loginRequestInteractor.unregisterReceiver();
+  }
+
+  @Override public void onResume() {
+    MFPPush.getInstance().listen(this);
+    loginRequestInteractor.registerReceiver();
   }
 
   @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {

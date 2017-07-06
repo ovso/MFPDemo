@@ -144,4 +144,9 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
     super.onDestroy();
     mPresenter.onDestroy();
   }
+
+  @Override protected void onResume() {
+    super.onResume();
+    mPresenter.onResume();
+  }
 }

@@ -16,6 +16,8 @@ interface LoginPresenter {
 
   void onDestroy();
 
+  void onResume();
+
   interface View {
 
     void showIdError(String msg);

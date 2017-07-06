@@ -1,13 +1,13 @@
 package kr.co.enterprise1.mfpdemo.home;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import com.squareup.otto.Subscribe;
 import kr.co.enterprise1.mfpdemo.R;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
-import kr.co.enterprise1.mfpdemo.common.Constants;
+import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
+import kr.co.enterprise1.mfpdemo.eventbus.LogoutEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LogoutSuccessEvent;
 import lombok.Setter;
 
 class LogoutHandler {
@@ -20,24 +20,20 @@ class LogoutHandler {
   }
 
   void logout() {
-    Intent intent = new Intent(Constants.ACTION_LOGOUT);
-    localBroadcastManager.sendBroadcast(intent);
+    BusProvider.getInstance().post(new LogoutEvent());
   }
 
-  private BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
-    @Override public void onReceive(Context context, Intent intent) {
-      onLogoutListener.onLogoutSuccess();
-      Analytics.getInstance().logout();
-    }
-  };
+  @Subscribe public void onLogoutSuccessEvent(LogoutSuccessEvent event) {
+    onLogoutListener.onLogoutSuccess();
+    Analytics.getInstance().logout();
+  }
 
   void registerReceiver() {
-    localBroadcastManager.registerReceiver(logoutReceiver,
-        new IntentFilter(Constants.ACTION_LOGOUT_SUCCESS));
+    BusProvider.getInstance().register(this);
   }
 
   void unregisterReceiver() {
-    localBroadcastManager.unregisterReceiver(logoutReceiver);
+    BusProvider.getInstance().unregister(this);
   }
 
   String getAlertMessage() {
