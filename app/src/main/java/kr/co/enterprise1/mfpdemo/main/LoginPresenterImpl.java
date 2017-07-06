@@ -7,7 +7,6 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.pixplicity.easyprefs.library.Prefs;
-import com.worklight.common.WLAnalytics;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.Constants;
@@ -16,19 +15,18 @@ import org.json.JSONObject;
 
 class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener {
   private static final String TAG = "LoginPresenterImpl";
-  //private final static String TAG = "LoginPresenterImpl";
   private LoginPresenter.View view;
-  private LoginInteractor loginInteractor;
-  private CredentialsInputHandler credentialsInputHandler;
+  private LoginRequestInteractor loginRequestInteractor;
+  private LoginInputHandler loginInputHandler;
   private VersionCheckInteractor versionCheckInteractor;
 
   LoginPresenterImpl(LoginPresenter.View view) {
     this.view = view;
     Context context = WLClient.getInstance().getContext();
-    loginInteractor = new LoginInteractor(context);
-    loginInteractor.setOnLoginResultListener(onLoginResultListener());
-    credentialsInputHandler = new CredentialsInputHandler(context);
-    credentialsInputHandler.setOnInputResultListener(onInputResultListener());
+    loginRequestInteractor = new LoginRequestInteractor(context);
+    loginRequestInteractor.setOnLoginResultListener(onLoginResultListener());
+    loginInputHandler = new LoginInputHandler(context);
+    loginInputHandler.setOnInputResultListener(onInputResultListener());
     versionCheckInteractor = new VersionCheckInteractor();
     versionCheckInteractor.setOnVersionCheckListener(onVersionCheckListener());
   }
@@ -36,6 +34,7 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   @Override public void onCreate() {
     // versionCheckInteractor.check();
     Analytics.getInstance().addDeviceEventListener();
+    //loginInteractor.autoLogin();
   }
 
   @Override public void onUpdateClick() {
@@ -58,8 +57,8 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
     };
   }
 
-  private CredentialsInputHandler.OnInputResultListener onInputResultListener() {
-    return new CredentialsInputHandler.OnInputResultListener() {
+  private LoginInputHandler.OnInputResultListener onInputResultListener() {
+    return new LoginInputHandler.OnInputResultListener() {
       @Override public void idError(String msg) {
         view.showIdError(msg);
       }
@@ -70,15 +69,14 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
 
       @Override public void pass(String id, String pw) {
         view.showLoading();
-        loginInteractor.login(id, pw);
+        loginRequestInteractor.login(id, pw);
         Analytics.getInstance().log("LoginScreen", "login", "login");
-
       }
     };
   }
 
-  private LoginInteractor.OnLoginResultListener onLoginResultListener() {
-    return new LoginInteractor.OnLoginResultListener() {
+  private LoginRequestInteractor.OnLoginResultListener onLoginResultListener() {
+    return new LoginRequestInteractor.OnLoginResultListener() {
       @Override public void onLoginSuccess() {
         view.navigateToHome();
         //Prefs.putString(Constants.PREFERENCES_KEY_USER, identity.getJSONObject("user").toString());
@@ -110,16 +108,16 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   }
 
   @Override public void onLoginClick(String id, String pw) {
-    credentialsInputHandler.login(id, pw);
+    loginInputHandler.login(id, pw);
   }
 
   @Override public void onStart() {
-    loginInteractor.registerReceiver();
+    loginRequestInteractor.registerReceiver();
     MFPPush.getInstance().listen(this);
   }
 
   @Override public void onPause() {
-    loginInteractor.unregisterReceiver();
+    loginRequestInteractor.unregisterReceiver();
     MFPPush.getInstance().hold();
   }
 

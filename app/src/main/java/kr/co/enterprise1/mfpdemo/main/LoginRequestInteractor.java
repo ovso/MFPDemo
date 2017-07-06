@@ -5,17 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import com.worklight.wlclient.api.WLAuthorizationManager;
 import kr.co.enterprise1.mfpdemo.common.Constants;
 import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class LoginInteractor {
-  private final static String TAG = "LoginInteractor";
+class LoginRequestInteractor {
+  private final static String TAG = "LoginRequestInteractor";
 
   private LocalBroadcastManager localBroadcastManager;
 
-  LoginInteractor(Context context) {
+  LoginRequestInteractor(Context context) {
     this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
   }
 
@@ -68,6 +69,11 @@ class LoginInteractor {
   }
 
   @Setter private OnLoginResultListener onLoginResultListener;
+
+  public void autoLogin() {
+    WLAuthorizationManager.getInstance()
+        .obtainAccessToken(null, null);
+  }
 
   interface OnLoginResultListener {
     void onLoginSuccess();

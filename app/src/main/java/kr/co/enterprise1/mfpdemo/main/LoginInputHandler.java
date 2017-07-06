@@ -4,10 +4,10 @@ import android.content.Context;
 import kr.co.enterprise1.mfpdemo.R;
 import lombok.Setter;
 
-class CredentialsInputHandler {
+class LoginInputHandler {
   private Context context;
 
-  CredentialsInputHandler(Context context) {
+  LoginInputHandler(Context context) {
     this.context = context;
   }
 
