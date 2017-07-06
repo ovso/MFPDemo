@@ -10,4 +10,5 @@ import lombok.Getter;
 @AllArgsConstructor public class LoginEvent {
   @Getter private String id;
   @Getter private String pw;
+  @Getter private boolean remember;
 }

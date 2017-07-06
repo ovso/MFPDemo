@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,6 +25,7 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   @BindView(R.id.pw_edittext) TextInputEditText mPwEditText;
   @BindView(R.id.id_textinputlayout) TextInputLayout mIdTextInputLayout;
   @BindView(R.id.pw_textinputlayout) TextInputLayout mPwTextInputLayout;
+  @BindView(R.id.remember_checkbox) CheckBox mRememberCheckBox;
 
   private LoginPresenter mPresenter;
 
@@ -36,7 +38,7 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   @OnClick(R.id.sign_in_button) void onSignInClick() {
     String id = mIdEditText.getText().toString().trim();
     String pw = mPwEditText.getText().toString().trim();
-    mPresenter.onLoginClick(id, pw);
+    mPresenter.onLoginClick(id, pw, mRememberCheckBox.isChecked());
   }
 
   @Override protected int getLayoutResId() {

@@ -65,8 +65,8 @@ class LoginRequestInteractor {
     onLoginResultListener.onLoginFinished();
   }
 
-  void login(String id, String pw) {
-    BusProvider.getInstance().post(new LoginEvent(id, pw));
+  void login(String id, String pw, boolean isRemember) {
+    BusProvider.getInstance().post(new LoginEvent(id, pw, isRemember));
   }
 
   @Setter private OnLoginResultListener onLoginResultListener;

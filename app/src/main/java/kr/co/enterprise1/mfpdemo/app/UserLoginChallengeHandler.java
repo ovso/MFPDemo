@@ -64,6 +64,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
       JSONObject credentials = new JSONObject();
       credentials.put("username", event.getId());
       credentials.put("password", event.getPw());
+      credentials.put("rememberMe", event.isRemember());
       new Thread(() -> login(credentials)).start();
     } catch (JSONException e) {
       e.printStackTrace();

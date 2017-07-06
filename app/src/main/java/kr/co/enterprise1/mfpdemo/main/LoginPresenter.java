@@ -4,7 +4,7 @@ import kr.co.enterprise1.mfpdemo.main.vo.VersionCheck;
 
 interface LoginPresenter {
 
-  void onLoginClick(String id, String pw);
+  void onLoginClick(String id, String pw, boolean isRemember);
 
   void onStart();
 

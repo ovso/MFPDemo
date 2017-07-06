@@ -62,6 +62,11 @@
         android:text="@string/login"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         />
+    <CheckBox
+        android:id="@+id/remember_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remember_me"/>
   </LinearLayout>
   <Button
       android:id="@+id/setting_button"

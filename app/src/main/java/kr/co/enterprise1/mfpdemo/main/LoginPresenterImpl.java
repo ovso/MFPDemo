@@ -17,7 +17,7 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   private static final String TAG = "LoginPresenterImpl";
   private LoginPresenter.View view;
   private LoginRequestInteractor loginRequestInteractor;
-  private LoginInputHandler loginInputHandler;
+  private LoginInputCheckHandler loginInputCheckHandler;
   private VersionCheckInteractor versionCheckInteractor;
 
   LoginPresenterImpl(LoginPresenter.View view) {
@@ -25,8 +25,8 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
     Context context = WLClient.getInstance().getContext();
     loginRequestInteractor = new LoginRequestInteractor(context);
     loginRequestInteractor.setOnLoginResultListener(onLoginResultListener());
-    loginInputHandler = new LoginInputHandler(context);
-    loginInputHandler.setOnInputResultListener(onInputResultListener());
+    loginInputCheckHandler = new LoginInputCheckHandler(context);
+    loginInputCheckHandler.setOnInputResultListener(onInputResultListener());
     versionCheckInteractor = new VersionCheckInteractor();
     versionCheckInteractor.setOnVersionCheckListener(onVersionCheckListener());
   }
@@ -57,8 +57,8 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
     };
   }
 
-  private LoginInputHandler.OnInputResultListener onInputResultListener() {
-    return new LoginInputHandler.OnInputResultListener() {
+  private LoginInputCheckHandler.OnInputResultListener onInputResultListener() {
+    return new LoginInputCheckHandler.OnInputResultListener() {
       @Override public void idError(String msg) {
         view.showIdError(msg);
       }
@@ -67,9 +67,10 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
         view.showPwError(msg);
       }
 
-      @Override public void pass(String id, String pw) {
+      @Override public void pass(String id, String pw, boolean isRemember) {
         view.showLoading();
-        loginRequestInteractor.login(id, pw);
+
+        loginRequestInteractor.login(id, pw, isRemember);
         Analytics.getInstance().log("LoginScreen", "login", "login");
       }
     };
@@ -107,8 +108,8 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
     };
   }
 
-  @Override public void onLoginClick(String id, String pw) {
-    loginInputHandler.login(id, pw);
+  @Override public void onLoginClick(String id, String pw, boolean isRemember) {
+    loginInputCheckHandler.check(id, pw, isRemember);
   }
 
   @Override public void onStart() {

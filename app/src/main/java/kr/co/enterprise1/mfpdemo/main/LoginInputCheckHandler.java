@@ -4,14 +4,14 @@ import android.content.Context;
 import kr.co.enterprise1.mfpdemo.R;
 import lombok.Setter;
 
-class LoginInputHandler {
+class LoginInputCheckHandler {
   private Context context;
 
-  LoginInputHandler(Context context) {
+  LoginInputCheckHandler(Context context) {
     this.context = context;
   }
 
-  public void login(String id, String pw) {
+  public void check(String id, String pw, boolean isRemember) {
     boolean isIdEmpty = id.isEmpty();
     boolean isPwEmpty = pw.isEmpty();
     if (isIdEmpty) {
@@ -25,7 +25,7 @@ class LoginInputHandler {
       onInputResultListener.pwError("");
     }
     if (!isIdEmpty && !isPwEmpty) {
-      onInputResultListener.pass(id, pw);
+      onInputResultListener.pass(id, pw, isRemember);
     }
   }
 
@@ -36,6 +36,6 @@ class LoginInputHandler {
 
     void pwError(String msg);
 
-    void pass(String id, String pw);
+    void pass(String id, String pw, boolean isRemember);
   }
 }
