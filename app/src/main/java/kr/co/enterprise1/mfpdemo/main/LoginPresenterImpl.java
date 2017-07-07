@@ -7,24 +7,27 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.squareup.otto.Subscribe;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.Constants;
+import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginFailureEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginRequiredEvent;
+import kr.co.enterprise1.mfpdemo.eventbus.LoginSuccessEvent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener {
   private static final String TAG = "LoginPresenterImpl";
   private LoginPresenter.View view;
-  private LoginRequestInteractor loginRequestInteractor;
   private LoginInputCheckHandler loginInputCheckHandler;
   private VersionCheckInteractor versionCheckInteractor;
 
   LoginPresenterImpl(LoginPresenter.View view) {
     this.view = view;
     Context context = WLClient.getInstance().getContext();
-    loginRequestInteractor = new LoginRequestInteractor(context);
-    loginRequestInteractor.setOnLoginResultListener(onLoginResultListener());
     loginInputCheckHandler = new LoginInputCheckHandler(context);
     loginInputCheckHandler.setOnInputResultListener(onInputResultListener());
     versionCheckInteractor = new VersionCheckInteractor();
@@ -69,41 +72,8 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
 
       @Override public void pass(String id, String pw, boolean isRemember) {
         view.showLoading();
-
-        loginRequestInteractor.login(id, pw, isRemember);
+        BusProvider.getInstance().post(new LoginEvent(id, pw, isRemember));
         Analytics.getInstance().log("LoginScreen", "login", "login");
-      }
-    };
-  }
-
-  private LoginRequestInteractor.OnLoginResultListener onLoginResultListener() {
-    return new LoginRequestInteractor.OnLoginResultListener() {
-      @Override public void onLoginSuccess() {
-        view.navigateToHome();
-        //Prefs.putString(Constants.PREFERENCES_KEY_USER, identity.getJSONObject("user").toString());
-        String userInfo = Prefs.getString(Constants.PREFERENCES_KEY_USER, null);
-        if (!TextUtils.isEmpty(userInfo)) {
-          try {
-            JSONObject userJson = new JSONObject(userInfo);
-            String id = userJson.getString("id");
-            Analytics.getInstance().login(id);
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-
-      @Override public void onLoginFailure(String errorMsg) {
-        //view.showErrorAlert("!", errorMsg);
-        view.showErrorSnackbar(errorMsg);
-      }
-
-      @Override public void onLoginRequired(String errorMsg, int remaningAttempts) {
-        view.showErrorSnackbar(errorMsg, remaningAttempts);
-      }
-
-      @Override public void onLoginFinished() {
-        view.hideLoading();
       }
     };
   }
@@ -113,17 +83,17 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   }
 
   @Override public void onStart() {
-
+    // Do something...
   }
 
   @Override public void onPause() {
     MFPPush.getInstance().hold();
-    loginRequestInteractor.unregisterReceiver();
+    BusProvider.getInstance().unregister(this);
   }
 
   @Override public void onResume() {
     MFPPush.getInstance().listen(this);
-    loginRequestInteractor.registerReceiver();
+    BusProvider.getInstance().register(this);
   }
 
   @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {
@@ -136,5 +106,34 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
         "alert = " + alert + " \n" + "ID = " + alertID + "\n" + "alertPayload = " + alertPayload);
     // Show the received notification in an AlertDialog
     view.showNotificationsAlert("Push Notifications", mfpSimplePushNotification.getAlert());
+  }
+
+  @Subscribe public void onLoginRequiredEvent(LoginRequiredEvent event) {
+    view.showErrorSnackbar(event.getErrorMsg(), event.getRemainingAttempts());
+    view.hideLoading();
+  }
+
+  @Subscribe public void onLoginSuccessEvent(LoginSuccessEvent event) {
+    String userInfo = Prefs.getString(Constants.PREFERENCES_KEY_USER, null);
+    if (!TextUtils.isEmpty(userInfo)) {
+      try {
+        JSONObject userJson = new JSONObject(userInfo);
+        String id = userJson.getString("id");
+        Analytics.getInstance().login(id);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    view.navigateToHome();
+    view.hideLoading();
+  }
+
+  @Subscribe public void onLoginFailureEvent(LoginFailureEvent event) {
+    view.showErrorSnackbar(event.getErrorMsg());
+    view.hideLoading();
+  }
+
+  void login(String id, String pw, boolean isRemember) {
+    BusProvider.getInstance().post(new LoginEvent(id, pw, isRemember));
   }
 }
