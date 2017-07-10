@@ -27,10 +27,6 @@ class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
     view.showHello(model.getDisplayName());
   }
 
-  @Override public void onGetBanlanceClick() {
-
-  }
-
   @Override public void onLogoutClick() {
     view.showLogoutAlert("!", logoutHandler.getAlertMessage());//logoutHandler.logout();
   }
@@ -56,6 +52,10 @@ class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
 
   @Override public void onDestroy() {
     Analytics.getInstance().send();
+  }
+
+  @Override public void onSettingClick() {
+    view.navigateToSetting();
   }
 
   @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {

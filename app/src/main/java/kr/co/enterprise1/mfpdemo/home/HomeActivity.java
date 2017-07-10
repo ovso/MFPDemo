@@ -11,6 +11,7 @@ import butterknife.OnClick;
 import kr.co.enterprise1.mfpdemo.R;
 import kr.co.enterprise1.mfpdemo.common.AbsBaseActivity;
 import kr.co.enterprise1.mfpdemo.main.LoginActivity;
+import kr.co.enterprise1.mfpdemo.setting.SettingActivity;
 
 public class HomeActivity extends AbsBaseActivity implements HomePresenter.View {
   @BindView(R.id.hello_textview) TextView mHelloTextView;
@@ -28,8 +29,8 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
     return R.layout.activity_home;
   }
 
-  @OnClick(R.id.getbalance_button) void onGetBanlanceClick() {
-    mPresenter.onGetBanlanceClick();
+  @OnClick(R.id.setting_button) void onSettingClick() {
+    mPresenter.onSettingClick();
   }
 
   @OnClick(R.id.logout_button) void onLogoutClick() {
@@ -62,13 +63,17 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
         .setMessage(message)
         .setPositiveButton(android.R.string.ok, null)
         .show();
-
   }
 
   @Override public void activityFinish() {
     ActivityCompat.finishAffinity(this);
     System.runFinalization();
     System.exit(0);
+  }
+
+  @Override public void navigateToSetting() {
+    Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+    startActivity(intent);
   }
 
   @Override public void onBackPressed() {

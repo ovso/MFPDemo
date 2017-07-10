@@ -68,12 +68,5 @@
         android:layout_height="wrap_content"
         android:text="@string/remember_me"/>
   </LinearLayout>
-  <Button
-      android:id="@+id/setting_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="설정"
-      style="@style/Widget.AppCompat.Button.Borderless.Colored"
-      />
 
 </FrameLayout>

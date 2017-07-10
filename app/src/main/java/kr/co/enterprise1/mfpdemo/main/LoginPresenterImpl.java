@@ -9,6 +9,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotif
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.otto.Subscribe;
 import com.worklight.wlclient.api.WLClient;
+import hugo.weaving.DebugLog;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.Constants;
 import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
@@ -70,7 +71,7 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
         view.showPwError(msg);
       }
 
-      @Override public void pass(String id, String pw, boolean isRemember) {
+      @DebugLog @Override public void pass(String id, String pw, boolean isRemember) {
         view.showLoading();
         BusProvider.getInstance().post(new LoginEvent(id, pw, isRemember));
         Analytics.getInstance().log("LoginScreen", "login", "login");

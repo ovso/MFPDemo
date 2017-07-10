@@ -15,11 +15,9 @@ import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.OnClick;
 import kr.co.enterprise1.mfpdemo.R;
-import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.AbsBaseActivity;
 import kr.co.enterprise1.mfpdemo.home.HomeActivity;
 import kr.co.enterprise1.mfpdemo.main.vo.VersionCheck;
-import kr.co.enterprise1.mfpdemo.setting.SettingActivity;
 
 public class LoginActivity extends AbsBaseActivity implements LoginPresenter.View {
   @BindView(R.id.id_edittext) TextInputEditText mIdEditText;
@@ -114,12 +112,6 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
     } catch (ActivityNotFoundException e) {
       Snackbar.make(mRootView, R.string.please_install_appcenter, Snackbar.LENGTH_SHORT).show();
     }
-  }
-
-  @OnClick(R.id.setting_button) void onSettingClick() {
-    Analytics.getInstance().log("LoginScreen", "setting", "setting");
-    Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-    startActivity(intent);
   }
 
   @Override public void exitApp() {

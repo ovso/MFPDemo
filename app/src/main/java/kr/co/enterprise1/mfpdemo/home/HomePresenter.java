@@ -5,8 +5,6 @@ interface HomePresenter {
 
   void onCreate();
 
-  void onGetBanlanceClick();
-
   void onLogoutClick();
 
   void onStart();
@@ -19,6 +17,8 @@ interface HomePresenter {
 
   void onDestroy();
 
+  void onSettingClick();
+
   interface View {
     void showHello(String text);
 
@@ -29,5 +29,7 @@ interface HomePresenter {
     void showNotificationsAlert(String title, String message);
 
     void activityFinish();
+
+    void navigateToSetting();
   }
 }
