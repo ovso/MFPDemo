@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
@@ -150,5 +151,11 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
   @Override protected void onResume() {
     super.onResume();
     mPresenter.onResume();
+  }
+
+  @Override public void onBackPressed() {
+    ActivityCompat.finishAffinity(this);
+    System.runFinalization();
+    System.exit(0);
   }
 }

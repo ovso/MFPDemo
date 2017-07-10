@@ -11,6 +11,8 @@ public interface SplashPresetner {
 
   void onPause();
 
+  void onBackPressed();
+
   interface View {
 
     void navigateToLogin();
@@ -18,5 +20,9 @@ public interface SplashPresetner {
     void hideLogin();
 
     void showLogin();
+
+    void navigateToHome();
+
+    void activityFinish();
   }
 }

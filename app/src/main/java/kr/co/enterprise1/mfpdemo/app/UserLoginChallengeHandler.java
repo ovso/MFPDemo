@@ -11,6 +11,7 @@ import com.worklight.wlclient.api.WLFailResponse;
 import com.worklight.wlclient.api.WLLoginResponseListener;
 import com.worklight.wlclient.api.WLLogoutResponseListener;
 import com.worklight.wlclient.api.challengehandler.SecurityCheckChallengeHandler;
+import hugo.weaving.DebugLog;
 import kr.co.enterprise1.mfpdemo.common.Constants;
 import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
 import kr.co.enterprise1.mfpdemo.eventbus.LoginEvent;
@@ -55,11 +56,11 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     handler = new Handler(Looper.getMainLooper());
   }
 
-  @Subscribe public void onLogoutEvent(LogoutEvent event) {
+  @DebugLog @Subscribe public void onLogoutEvent(LogoutEvent event) {
     logout();
   }
 
-  @Subscribe public void onLoginEvent(LoginEvent event) {
+  @DebugLog @Subscribe public void onLoginEvent(LoginEvent event) {
     try {
       JSONObject credentials = new JSONObject();
       credentials.put("username", event.getId());
@@ -77,7 +78,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     return challengeHandler;
   }
 
-  @Override public void handleChallenge(JSONObject jsonObject) {
+  @DebugLog @Override public void handleChallenge(JSONObject jsonObject) {
     Log.d(securityCheckName, "Challenge Received");
     isChallenged = true;
     try {
@@ -96,7 +97,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
         () -> BusProvider.getInstance().post(new LoginRequiredEvent(errorMsg, remainingAttempts)));
   }
 
-  @Override public void handleFailure(JSONObject error) {
+  @DebugLog @Override public void handleFailure(JSONObject error) {
     super.handleFailure(error);
     isChallenged = false;
     if (error.isNull("failure")) {
@@ -112,7 +113,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     Log.d(securityCheckName, "handleFailure");
   }
 
-  @Override public void handleSuccess(JSONObject identity) {
+  @DebugLog @Override public void handleSuccess(JSONObject identity) {
     super.handleSuccess(identity);
     isChallenged = false;
     try {
@@ -126,7 +127,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     Log.d(securityCheckName, "handleSuccess");
   }
 
-  private void login(JSONObject credentials) {
+  @DebugLog private void login(JSONObject credentials) {
     if (isChallenged) {
       submitChallengeAnswer(credentials);
     } else {
@@ -145,7 +146,7 @@ class UserLoginChallengeHandler extends SecurityCheckChallengeHandler {
     }
   }
 
-  private void logout() {
+  @DebugLog private void logout() {
     WLAuthorizationManager.getInstance().logout(securityCheckName, new WLLogoutResponseListener() {
       @Override public void onSuccess() {
         Log.d(securityCheckName, "Logout Success");

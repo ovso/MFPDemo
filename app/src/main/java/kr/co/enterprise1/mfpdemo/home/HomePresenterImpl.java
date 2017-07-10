@@ -7,7 +7,6 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificatio
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
-import kr.co.enterprise1.mfpdemo.app.MyApplication;
 
 class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
 
@@ -33,7 +32,7 @@ class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
   }
 
   @Override public void onLogoutClick() {
-    logoutHandler.logout();
+    view.showLogoutAlert("!", logoutHandler.getAlertMessage());//logoutHandler.logout();
   }
 
   @Override public void onStart() {
@@ -47,7 +46,8 @@ class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
   }
 
   @Override public void onBackPressed() {
-    view.showLogoutAlert("!", logoutHandler.getAlertMessage());
+    //view.showLogoutAlert("!", logoutHandler.getAlertMessage());
+    view.activityFinish();
   }
 
   @Override public void onLogoutDialogOkClick() {

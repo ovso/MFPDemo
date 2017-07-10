@@ -27,5 +27,7 @@ interface HomePresenter {
     void showLogoutAlert(String title, String message);
 
     void showNotificationsAlert(String title, String message);
+
+    void activityFinish();
   }
 }

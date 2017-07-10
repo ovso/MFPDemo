@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -62,6 +63,12 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
         .setPositiveButton(android.R.string.ok, null)
         .show();
 
+  }
+
+  @Override public void activityFinish() {
+    ActivityCompat.finishAffinity(this);
+    System.runFinalization();
+    System.exit(0);
   }
 
   @Override public void onBackPressed() {

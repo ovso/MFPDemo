@@ -8,6 +8,7 @@ import butterknife.BindView;
 import com.github.ybq.android.spinkit.SpinKitView;
 import kr.co.enterprise1.mfpdemo.R;
 import kr.co.enterprise1.mfpdemo.common.AbsBaseActivity;
+import kr.co.enterprise1.mfpdemo.home.HomeActivity;
 import kr.co.enterprise1.mfpdemo.main.LoginActivity;
 
 /**
@@ -40,12 +41,11 @@ public class SplashActivity extends AbsBaseActivity implements SplashPresetner.V
   }
 
   @Override public void onBackPressed() {
+    mPresenter.onBackPressed();
   }
 
   @Override public void navigateToLogin() {
     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
   }
 
@@ -55,5 +55,15 @@ public class SplashActivity extends AbsBaseActivity implements SplashPresetner.V
 
   @Override public void showLogin() {
     mLoadingbar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void navigateToHome() {
+    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+    startActivity(intent);
+  }
+
+  @Override public void activityFinish() {
+    //super.onBackPressed();
+    finishAffinity();
   }
 }
