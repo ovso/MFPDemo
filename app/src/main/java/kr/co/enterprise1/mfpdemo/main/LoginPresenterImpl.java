@@ -24,21 +24,16 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   private static final String TAG = "LoginPresenterImpl";
   private LoginPresenter.View view;
   private LoginInputCheckHandler loginInputCheckHandler;
-  private VersionCheckInteractor versionCheckInteractor;
 
   LoginPresenterImpl(LoginPresenter.View view) {
     this.view = view;
     Context context = WLClient.getInstance().getContext();
     loginInputCheckHandler = new LoginInputCheckHandler(context);
     loginInputCheckHandler.setOnInputResultListener(onInputResultListener());
-    versionCheckInteractor = new VersionCheckInteractor();
-    versionCheckInteractor.setOnVersionCheckListener(onVersionCheckListener());
   }
 
   @Override public void onCreate() {
-    // versionCheckInteractor.check();
     Analytics.getInstance().addDeviceEventListener();
-    //loginInteractor.autoLogin();
   }
 
   @Override public void onUpdateClick() {
@@ -49,16 +44,6 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   @Override public void onDestroy() {
     Analytics.getInstance().removeDeviceEventListener();
     Analytics.getInstance().send();
-  }
-
-  private VersionCheckInteractor.OnVersionCheckListener onVersionCheckListener() {
-    return version -> {
-      if (version != null) {
-        if (!version.getCenter_version().equals(version.getMobile_version())) {
-          view.showUpdateAlert(version);
-        }
-      }
-    };
   }
 
   private LoginInputCheckHandler.OnInputResultListener onInputResultListener() {
