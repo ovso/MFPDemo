@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Toast;
 import butterknife.BindView;
 import com.github.ybq.android.spinkit.SpinKitView;
 import kr.co.enterprise1.mfpdemo.R;
@@ -65,5 +66,9 @@ public class SplashActivity extends AbsBaseActivity implements SplashPresetner.V
   @Override public void activityFinish() {
     //super.onBackPressed();
     finishAffinity();
+  }
+
+  @Override public void showToast(String msg) {
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
   }
 }

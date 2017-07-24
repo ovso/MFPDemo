@@ -45,6 +45,7 @@ class SplashPresenterImpl implements SplashPresetner {
           @DebugLog @Override public void onFailure(WLFailResponse wlFailResponse) {
             Log.d(TAG, "errorMsg = " + wlFailResponse.getErrorMsg());
             Log.d(TAG, "errorStatusCode = " + wlFailResponse.getErrorStatusCode());
+            handler.post(() -> view.showToast(wlFailResponse.getErrorMsg()));
           }
         });
   }

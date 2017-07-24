@@ -24,5 +24,7 @@ public interface SplashPresetner {
     void navigateToHome();
 
     void activityFinish();
+
+    void showToast(String msg);
   }
 }
