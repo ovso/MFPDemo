@@ -38,8 +38,6 @@ interface LoginPresenter {
 
     void showUpdateAlert(VersionCheck version);
 
-    void navigateToExternalAppCenter();
-
     void exitApp();
 
     void showNotificationsAlert(String title, String message);

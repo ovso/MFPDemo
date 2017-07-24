@@ -1,9 +1,7 @@
 package kr.co.enterprise1.mfpdemo.main;
 
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -102,16 +100,6 @@ public class LoginActivity extends AbsBaseActivity implements LoginPresenter.Vie
             .setPositiveButton(android.R.string.ok, (dialog, which) -> mPresenter.onUpdateClick())
             .show();
     runOnUiThread(runnable);
-  }
-
-  @Override public void navigateToExternalAppCenter() {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse("ibmappctr://show-app?id=com.ibm.appcenter"));
-    try {
-      startActivity(intent);
-    } catch (ActivityNotFoundException e) {
-      Snackbar.make(mRootView, R.string.please_install_appcenter, Snackbar.LENGTH_SHORT).show();
-    }
   }
 
   @Override public void exitApp() {

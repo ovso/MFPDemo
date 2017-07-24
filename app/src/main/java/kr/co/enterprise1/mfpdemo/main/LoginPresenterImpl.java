@@ -37,7 +37,6 @@ class LoginPresenterImpl implements LoginPresenter, MFPPushNotificationListener 
   }
 
   @Override public void onUpdateClick() {
-    view.navigateToExternalAppCenter();
     view.exitApp();
   }
 
