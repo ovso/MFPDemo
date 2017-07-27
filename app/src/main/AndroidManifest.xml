@@ -43,7 +43,7 @@
         android:name=".setting.SettingActivity"
         android:label="@string/setting"
         android:screenOrientation="portrait"/>
-    <activity android:name="com.worklight.wlclient.ui.UIActivity"/>
+    <activity android:name="com.worklight.wlclient.ui.UIActivity" android:screenOrientation="portrait"/>
 
     <!-- GCM Receiver -->
     <receiver
