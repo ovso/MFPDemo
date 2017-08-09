@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.MultiSelectListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
@@ -77,6 +78,11 @@ public class SettingFragment extends PreferenceFragment implements SettingFragme
   @Override public void setTagSummary(String summary) {
     Runnable run = () -> mTagsNotificationsListPreference.setSummary(summary);
     getActivity().runOnUiThread(run);
+  }
+
+  @Override public void setVersionName(String title) {
+    Preference screen = findPreference("version");
+    screen.setTitle(title);
   }
 
   @Override public void showNotificationsAlert(String title, String message) {

@@ -13,4 +13,8 @@
       android:persistent="true"
       android:summary="Push.ALL"
       android:title="@string/tags_notifications"/>
+  <PreferenceScreen
+      android:key="version"
+      android:title="ver 0.1">
+  </PreferenceScreen>
 </PreferenceScreen>

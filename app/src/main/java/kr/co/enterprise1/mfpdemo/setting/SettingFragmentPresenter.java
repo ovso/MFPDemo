@@ -1,7 +1,6 @@
 package kr.co.enterprise1.mfpdemo.setting;
 
 import android.preference.Preference;
-import java.util.List;
 
 /**
  * Created by jaeho on 2017. 6. 28
@@ -40,5 +39,7 @@ public interface SettingFragmentPresenter {
     void setTagEntries(String[] tags);
 
     void setTagSummary(String summary);
+
+    void setVersionName(String name);
   }
 }

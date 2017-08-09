@@ -10,6 +10,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushResponseLis
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import java.util.HashSet;
 import java.util.List;
+import kr.co.enterprise1.mfpdemo.app.MyApplication;
 
 /**
  * Created by jaeho on 2017. 6. 28
@@ -31,6 +32,7 @@ public class SettingFragmentPresenterImpl
     if (((SwitchPreference) notifications).isChecked()) {
       registerDevice();
     }
+    view.setVersionName("Version. " + SettingModel.getAppVersion(MyApplication.getInstance()));
   }
 
   @Override public void onNotificationsPreferenceChange(boolean value) {
@@ -72,7 +74,7 @@ public class SettingFragmentPresenterImpl
           .unsubscribe(model.getTagNames(), new MFPPushResponseListener<String[]>() {
             @Override public void onSuccess(String[] tagNames) {
               view.hideLoading();
-              setTagSummary(new String[]{"Push.ALL"});
+              setTagSummary(new String[] { "Push.ALL" });
             }
 
             @Override public void onFailure(MFPPushException e) {
