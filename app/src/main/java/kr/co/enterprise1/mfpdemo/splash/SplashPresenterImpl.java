@@ -31,7 +31,7 @@ class SplashPresenterImpl implements SplashPresetner {
     view.showLogin();
     handler.postDelayed(run, 2000);
   }
-
+  private boolean isError;
   @DebugLog private void obtainAccessToken() {
     WLAuthorizationManager.getInstance()
         .obtainAccessToken("UserLogin", new WLAccessTokenListener() {
@@ -40,12 +40,14 @@ class SplashPresenterImpl implements SplashPresetner {
             Log.d(TAG, "value = " + accessToken.getValue());
             Log.d(TAG, "AuthRequstHeader = " + accessToken.getAsAuthorizationRequestHeader());
             Log.d(TAG, "parameter = " + accessToken.getAsFormEncodedBodyParameter());
+            isError = false;
           }
 
           @DebugLog @Override public void onFailure(WLFailResponse wlFailResponse) {
             Log.d(TAG, "errorMsg = " + wlFailResponse.getErrorMsg());
             Log.d(TAG, "errorStatusCode = " + wlFailResponse.getErrorStatusCode());
             handler.post(() -> view.showToast(wlFailResponse.getErrorMsg()));
+            isError = true;
           }
         });
   }
@@ -64,6 +66,9 @@ class SplashPresenterImpl implements SplashPresetner {
 
   @Override public void onResume() {
     BusProvider.getInstance().register(this);
+    if(isError) {
+      view.activityFinish();
+    }
   }
 
   @Override public void onPause() {

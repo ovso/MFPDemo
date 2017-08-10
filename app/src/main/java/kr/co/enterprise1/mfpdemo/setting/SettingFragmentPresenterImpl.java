@@ -32,7 +32,7 @@ public class SettingFragmentPresenterImpl
     if (((SwitchPreference) notifications).isChecked()) {
       registerDevice();
     }
-    view.setVersionName("Version. " + SettingModel.getAppVersion(MyApplication.getInstance()));
+    view.setVersionName("AppVer " + SettingModel.getAppVersion(MyApplication.getInstance()));
   }
 
   @Override public void onNotificationsPreferenceChange(boolean value) {
