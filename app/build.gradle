@@ -42,7 +42,7 @@ android {
       applicationVariants.all { variant ->
         variant.outputs.each { output ->
           def formattedDate = new Date().format('yyyyMMdd_HHmmss')
-          def apkName = "MemoryPower_" + variant.versionName +
+          def apkName = "MFPdemo" + variant.versionName +
               "_" +
               variant.versionCode +
               "_" +
