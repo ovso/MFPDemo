@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -94,5 +95,10 @@ public class HomeActivity extends AbsBaseActivity implements HomePresenter.View 
   @Override protected void onDestroy() {
     super.onDestroy();
     mPresenter.onDestroy();
+  }
+
+  @OnClick({ R.id.crash_1_button, R.id.crash_2_button, R.id.crash_3_button, R.id.crash_4_button })
+  void onCrashClick(View view) {
+    mPresenter.onCrashClick(view.getId());
   }
 }

@@ -6,6 +6,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.worklight.wlclient.api.WLClient;
+import kr.co.enterprise1.mfpdemo.R;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 
 class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
@@ -56,6 +57,20 @@ class HomePresenterImpl implements HomePresenter, MFPPushNotificationListener {
 
   @Override public void onSettingClick() {
     view.navigateToSetting();
+  }
+
+  @Override public void onCrashClick(int id) {
+    switch (id) {
+      case R.id.crash_1_button:
+        throw new ArrayIndexOutOfBoundsException("Crash button 1");
+      case R.id.crash_2_button:
+        throw new NumberFormatException("Crash button 2");
+      case R.id.crash_3_button:
+        throw new ClassCastException("Crash button 3");
+      case R.id.crash_4_button:
+        throw new RuntimeException("Crash button 4");
+
+    }
   }
 
   @Override public void onReceive(MFPSimplePushNotification mfpSimplePushNotification) {

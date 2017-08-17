@@ -3,9 +3,12 @@ package kr.co.enterprise1.mfpdemo.splash;
 import android.os.Handler;
 import android.util.Log;
 import com.squareup.otto.Subscribe;
+import com.worklight.common.Logger;
+import com.worklight.wlclient.WLRequestListener;
 import com.worklight.wlclient.api.WLAccessTokenListener;
 import com.worklight.wlclient.api.WLAuthorizationManager;
 import com.worklight.wlclient.api.WLFailResponse;
+import com.worklight.wlclient.api.WLResponse;
 import com.worklight.wlclient.auth.AccessToken;
 import hugo.weaving.DebugLog;
 import kr.co.enterprise1.mfpdemo.eventbus.BusProvider;
@@ -30,6 +33,15 @@ class SplashPresenterImpl implements SplashPresetner {
   @Override public void onCreate() {
     view.showLogin();
     handler.postDelayed(run, 2000);
+    Logger.send(new WLRequestListener() {
+      @Override public void onSuccess(WLResponse wlResponse) {
+        Log.d("SplashPresenterImpl", "onSuccess = " + wlResponse.getOptions().getParameters().toString());
+      }
+
+      @Override public void onFailure(WLFailResponse wlFailResponse) {
+        Log.d("SplashPresenterImpl", "onFailure = " + wlFailResponse.getErrorMsg());
+      }
+    });
   }
   private boolean isError;
   @DebugLog private void obtainAccessToken() {

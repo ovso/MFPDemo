@@ -19,6 +19,8 @@ interface HomePresenter {
 
   void onSettingClick();
 
+  void onCrashClick(int id);
+
   interface View {
     void showHello(String text);
 

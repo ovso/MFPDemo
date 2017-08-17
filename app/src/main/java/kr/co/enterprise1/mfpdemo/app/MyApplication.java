@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import com.facebook.stetho.Stetho;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.worklight.common.Logger;
 import com.worklight.wlclient.api.WLClient;
 import kr.co.enterprise1.mfpdemo.analytics.Analytics;
 import kr.co.enterprise1.mfpdemo.common.Constants;
@@ -34,8 +35,9 @@ public class MyApplication extends Application {
     WLClient.createInstance(this);
     MFPPush.getInstance().initialize(this);
     Analytics.getInstance().initialize(this);
-    //WLAnalytics.init(this);
-
+    Logger.setContext(getApplicationContext());
+    Logger.setLevel(Logger.LEVEL.FATAL);
+    Logger.setCapture(true);
   }
 
   private void initPreferences() {
